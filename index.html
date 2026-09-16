@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      (function() {
+        try {
+          var target = typeof window !== 'undefined' ? window : globalThis;
+          if (!target) return;
+
+          var origFetch = target.fetch ? target.fetch.bind(target) : null;
+          var currentFetch = origFetch;
+
+          var descriptor = {
+            configurable: true,
+            enumerable: true,
+            get: function() {
+              return currentFetch || origFetch;
+            },
+            set: function(fn) {
+              currentFetch = fn;
+            }
+          };
+
+          // 1. Define directly on window / global target
+          try {
+            Object.defineProperty(target, 'fetch', descriptor);
+          } catch (e1) {}
+
+          // 2. Define on Window.prototype if present
+          if (typeof Window !== 'undefined' && Window.prototype) {
+            try {
+              Object.defineProperty(Window.prototype, 'fetch', descriptor);
+            } catch (e2) {}
+          }
+
+          // 3. Walk all prototypes to ensure no getter-only fetch blocks assignment
+          var p = target;
+          while (p) {
+            try {
+              var desc = Object.getOwnPropertyDescriptor(p, 'fetch');
+              if (desc && !desc.set) {
+                Object.defineProperty(p, 'fetch', descriptor);
+              }
+            } catch (e3) {}
+            p = Object.getPrototypeOf(p);
+          }
+        } catch (err) {
+          // Gracefully continue
+        }
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pairly — 18+ Social Dating &amp; Connection Platform</title>
+    <meta name="description" content="Meet. Connect. Interact. Pairly combines dating profiles, social networking, live chat, mail, and credit-based interactions." />
+    <meta property="og:title" content="Pairly — 18+ Social Dating &amp; Connection Platform" />
+    <meta property="og:description" content="Meet. Connect. Interact. Pairly combines dating profiles, social networking, live chat, mail, and credit-based interactions." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

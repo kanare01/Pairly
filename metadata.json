@@ -1,0 +1,6 @@
+{
+  "name": "Pairly",
+  "description": "18+ Social Dating & Connection Platform — Meet. Connect. Interact.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
